@@ -103,9 +103,15 @@ export class InventoryManager {
       throw new Error('Cannot checkout a finalized reservation')
     }
 
-    if (this.#now() >= reservation.expiresAt) {
-      this.#releaseExpiredReservation(reservation)
-      throw new Error('Reservation has expired')
+    const now = this.#now()
+
+    if (!Number.isFinite(now)) {
+        throw new TypeError('Clock must return a finite timestamp')
+    }
+
+    if (now >= reservation.expiresAt) {
+        this.#releaseExpiredReservation(reservation)
+        throw new Error('Reservation has expired')
     }
 
     reservation.status = RESERVATION_STATES.CHECKED_OUT
@@ -113,14 +119,20 @@ export class InventoryManager {
     return { ...reservation }
   }
 
-  expireReservation(reservationId) {
+    expireReservation(reservationId) {
     const reservation = this.#getExistingReservation(reservationId)
 
     if (reservation.status !== RESERVATION_STATES.RESERVED) {
       return false
     }
 
-    if (this.#now() < reservation.expiresAt) {
+    const now = this.#now()
+
+    if (!Number.isFinite(now)) {
+      throw new TypeError('Clock must return a finite timestamp')
+    }
+
+    if (now < reservation.expiresAt) {
       return false
     }
 
@@ -128,6 +140,7 @@ export class InventoryManager {
 
     return true
   }
+
 
   getAvailableStock(productId) {
     if (!this.#availableStock.has(productId)) {

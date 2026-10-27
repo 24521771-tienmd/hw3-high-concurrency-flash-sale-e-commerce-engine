@@ -147,3 +147,55 @@ test('rejects reservations for unknown products', () => {
     /unknown product/i,
   )
 })
+
+test('rejects checkout when the clock returns an invalid timestamp', () => {
+  let currentTime = 1000
+
+  const inventory = new InventoryManager(
+    { 'iphone-15': 1 },
+    {
+      reservationTtlMs: 1000,
+      now: () => currentTime,
+    },
+  )
+
+  const reservation = inventory.reserve('iphone-15', 1)
+  currentTime = Number.NaN
+
+  assert.throws(
+    () => inventory.checkout(reservation.id),
+    /clock|timestamp|time/i,
+  )
+
+  assert.equal(
+    inventory.getReservation(reservation.id).status,
+    'reserved',
+  )
+  assert.equal(inventory.getAvailableStock('iphone-15'), 0)
+})
+
+test('rejects expiration when the clock returns an invalid timestamp', () => {
+  let currentTime = 1000
+
+  const inventory = new InventoryManager(
+    { 'iphone-15': 1 },
+    {
+      reservationTtlMs: 1000,
+      now: () => currentTime,
+    },
+  )
+
+  const reservation = inventory.reserve('iphone-15', 1)
+  currentTime = Number.NaN
+
+  assert.throws(
+    () => inventory.expireReservation(reservation.id),
+    /clock|timestamp|time/i,
+  )
+
+  assert.equal(
+    inventory.getReservation(reservation.id).status,
+    'reserved',
+  )
+  assert.equal(inventory.getAvailableStock('iphone-15'), 0)
+})
