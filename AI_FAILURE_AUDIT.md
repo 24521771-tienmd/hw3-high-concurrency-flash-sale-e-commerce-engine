@@ -66,4 +66,22 @@ Findings are classified as:
 
 **Risk:** Low.
 
-**Evidence:** In `ProductCard.jsx`, the arrow suffix uses a conditional expression whose two branches both return the same string: `{isReserved ? ' →' : ' →
+**Evidence:** In `ProductCard.jsx`, the arrow suffix uses a conditional expression whose two branches both return the same string: `{isReserved ? ' →' : ' →'}`.
+
+**Impact:** The conditional adds complexity without changing the rendered output.
+
+**Recommended mitigation:** Replace the conditional with a single literal suffix or a meaningful conditional.
+
+**Verification status:** Confirmed by source inspection; not a functional defect.
+
+## 3. Verification Summary
+
+- Automated tests: 16 passed, 0 failed.
+- Oxlint: 0 warnings, 0 errors.
+- Vite production build: successful.
+- `git diff --check`: passed after whitespace cleanup.
+- Invalid-clock defect reproduced with failing tests before the fix, then verified by passing tests afterward.
+
+## 4. Scope and Limitations
+
+This audit covers the current client-side simulation and existing tests. It does not establish production readiness, distributed consistency, payment correctness, security under hostile clients, or real-world flash-sale capacity.
