@@ -441,9 +441,36 @@
   transition: background 180ms ease;
 }
 
-.buy-button:hover {
-  background: var(--accent);
+
+.buy-button:disabled {
+  background: #d8d5df;
+  color: #686273;
+  cursor: not-allowed;
 }
+
+.buy-button:disabled:hover {
+  background: #d8d5df;
+}
+
+.inventory-message {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border: 1px solid #d9e9df;
+  border-radius: 10px;
+  color: #17663d;
+  background: #f0faf3;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.reservation-status {
+  min-height: 32px;
+  margin: 0 0 12px;
+  color: #8a4b0f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 
 .site-footer {
   padding: 26px 20px;

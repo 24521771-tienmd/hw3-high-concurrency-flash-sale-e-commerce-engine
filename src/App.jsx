@@ -4,9 +4,13 @@ import SaleBanner from './components/SaleBanner'
 import CountdownTimer from './components/CountdownTimer'
 import ProductCard from './components/ProductCard'
 import { products } from './data/products'
+import useFlashSaleInventory from './hooks/useFlashSaleInventory'
 import './App.css'
 
 export default function App() {
+  const { inventory, message, reserve, checkout } =
+    useFlashSaleInventory(products)
+
   return (
     <div className="app-shell">
       <FlashSaleHeader />
@@ -27,9 +31,21 @@ export default function App() {
             <CountdownTimer />
           </div>
 
+          {message && (
+            <p className="inventory-message" role="status">
+              {message}
+            </p>
+          )}
+
           <div className="product-grid" id="products">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                inventory={inventory[product.id]}
+                onReserve={() => reserve(product.id)}
+                onCheckout={checkout}
+              />
             ))}
           </div>
         </section>
